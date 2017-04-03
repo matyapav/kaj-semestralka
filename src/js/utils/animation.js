@@ -57,4 +57,21 @@ export default class Animation {
     get actualFrame() {
         return this._actualFrame;
     }
+
+
+    get isRunning() {
+        return this._isRunning;
+    }
+
+    set isRunning(value) {
+        this._isRunning = value;
+    }
+
+    get fromToY() {
+        return this._fromToY;
+    }
+
+    setFromToY(value) {
+        this._fromToY = value;
+    }
 }

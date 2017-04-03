@@ -54,7 +54,7 @@ function checkCollisions() {
         if(walls[i].checkCollisionWithPlayer(player)){
             player.dx = 0;
             player.dy = 0;
-            player._animation.stopAnimation();
+            player.playerAnimation.stopAnimation();
         }
     }
     for(let i=0; i<items.length; i++){

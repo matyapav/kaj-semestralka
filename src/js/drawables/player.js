@@ -96,4 +96,8 @@ export default class Player extends Drawable{
     get backpack() {
         return this._backpack;
     }
+
+    get playerAnimation() {
+        return this._animation;
+    }
 }

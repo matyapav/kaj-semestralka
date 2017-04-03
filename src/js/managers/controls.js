@@ -21,26 +21,26 @@ export default class Controls {
         if(event.keyCode == 37) {
             this.player.dy = 0;
             this.player.dx = -playerSpeed; //left
-            this.player._animation._fromToY = [54,42];
-            this.player._animation.runAnimation();
+            this.player.playerAnimation.setFromToY([54,42]);
+            this.player.playerAnimation.runAnimation();
         }
         else if(event.keyCode == 38) {
             this.player.dx = 0;
             this.player.dy = -playerSpeed; //up
-            this.player._animation._fromToY = [150,42];
-            this.player._animation.runAnimation();
+            this.player.playerAnimation.setFromToY([150,42]);
+            this.player.playerAnimation.runAnimation();
         }
         else if(event.keyCode == 39) {
             this.player.dy = 0;
             this.player.dx = playerSpeed; //right
-            this.player._animation._fromToY = [102,42];
-            this.player._animation.runAnimation();
+            this.player.playerAnimation.setFromToY([102,42]);
+            this.player.playerAnimation.runAnimation();
         }
         else if(event.keyCode == 40) {
             this.player.dx = 0;
             this.player.dy = playerSpeed; //down
-            this.player._animation._fromToY = [6,42];
-            this.player._animation.runAnimation();
+            this.player.playerAnimation.setFromToY([6,42]);
+            this.player.playerAnimation.runAnimation();
         }
         else if(event.keyCode == 13){ //enter
             this.player.doPrimaryAction();
@@ -53,19 +53,19 @@ export default class Controls {
     movingKeyUp = function(event){
         if(event.keyCode == 37 && this.player.dx < 0) {
             this.player.dx = 0;
-            this.player._animation.stopAnimation();
+            this.player.playerAnimation.stopAnimation();
         }
         else if(event.keyCode == 38 && this.player.dy < 0) {
             this.player.dy = 0;
-            this.player._animation.stopAnimation();
+            this.player.playerAnimation.stopAnimation();
         }
         else if(event.keyCode == 39 && this.player.dx > 0) {
             this.player.dx = 0;
-            this.player._animation.stopAnimation();
+            this.player.playerAnimation.stopAnimation();
         }
         else if(event.keyCode == 40 && this.player.dy > 0) {
             this.player.dy = 0;
-            this.player._animation.stopAnimation();
+            this.player.playerAnimation.stopAnimation();
         }
     }.bind(this);
 
