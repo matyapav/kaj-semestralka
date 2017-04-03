@@ -1,0 +1,1 @@
+{"version":3,"sources":["playerController.js"],"names":[],"mappings":";;;;;;;;AAAA;;;IAGqB,gB;;;;kBAAA,gB","file":"playerController-compiled.js","sourcesContent":["/**\r\n * Created by Pavel on 02.04.2017.\r\n */\r\nexport default class PlayerController{\r\n\r\n}\r\n\r\n"]}
