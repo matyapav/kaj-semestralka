@@ -5,9 +5,9 @@
  * Created by Pavel on 03.04.2017.
  */
 //TODO udelat jednoho spolecneho predka pro vsechno co se vykresluje (neco jako drawable)
-import Tile from './tile.js'
+import Drawable from './drawable.js'
 
-export default class InteractiveTile extends Tile{
+export default class InteractiveTile extends Drawable{
 
     constructor(posX, posY, w, h, imgSrc) {
         super(posX, posY, w, h, imgSrc);

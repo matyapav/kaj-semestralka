@@ -3,10 +3,10 @@
  */
 //TODO jeden spolecny predek pro vsechny co se budou hybat
 import Backpack from './backpack.js'
-import Animation from './animation.js'
-import Tile from './tile.js'
+import Animation from '../utils/animation.js'
+import Drawable from './drawable.js'
 
-export default class Player extends Tile{
+export default class Player extends Drawable{
     _dx;
     _dy;
     _speed;
@@ -15,8 +15,8 @@ export default class Player extends Tile{
     _primaryAction;
     _animation;
 
-    constructor(posX, posY, w, h, speed) {
-        super(posX, posY, w, h);
+    constructor(posX, posY, w, h, speed, imgSrc) {
+        super(posX, posY, w, h, imgSrc);
         this._posX = posX;
         this._posY = posY;
         this._w = w;
@@ -28,9 +28,7 @@ export default class Player extends Tile{
         this._primaryAction = false;
         this._backpack = new Backpack();
 
-        let sprite = new Image();
-        sprite.src = '/img/trainer.png';
-        this._animation = new Animation(sprite, 4, 150, 0, [32, 30], [6,42], [this.w,this.h]);
+        this._animation = new Animation(this.image, 4, 150, 0, [32, 30], [6,42], [this.w,this.h]);
     }
 
     doPrimaryAction(){

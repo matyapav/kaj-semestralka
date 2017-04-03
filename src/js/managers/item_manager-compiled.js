@@ -12,4 +12,4 @@ exports.default = i = {
     4: { name: 'UltraBall', desc: 'Strong ball to catch really strong pokemons' }
 };
 
-//# sourceMappingURL=itemManager-compiled.js.map
+//# sourceMappingURL=item_manager-compiled.js.mapp

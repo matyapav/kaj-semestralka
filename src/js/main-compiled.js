@@ -1,51 +1,59 @@
 'use strict';
 
-var _player = require('./player.js');
+var _player = require('./drawables/player.js');
 
 var _player2 = _interopRequireDefault(_player);
 
-var _tile = require('./tile.js');
+var _drawable = require('./drawables/drawable.js');
 
-var _tile2 = _interopRequireDefault(_tile);
+var _drawable2 = _interopRequireDefault(_drawable);
 
-var _interactive_tile = require('./interactive_tile.js');
+var _interactive_tile = require('./drawables/interactive_tile.js');
 
 var _interactive_tile2 = _interopRequireDefault(_interactive_tile);
 
-var _controls = require('./controls.js');
+var _controls = require('./managers/controls.js');
 
 var _controls2 = _interopRequireDefault(_controls);
 
-var _item = require('./item.js');
+var _item = require('./drawables/item.js');
 
 var _item2 = _interopRequireDefault(_item);
 
-var _itemManager = require('./itemManager.js');
+var _item_manager = require('./managers/item_manager.js');
 
-var _itemManager2 = _interopRequireDefault(_itemManager);
+var _item_manager2 = _interopRequireDefault(_item_manager);
+
+var _level_manager = require('./managers/level_manager.js');
+
+var _level_manager2 = _interopRequireDefault(_level_manager);
+
+var _dialog = require('./drawables/dialog.js');
+
+var _dialog2 = _interopRequireDefault(_dialog);
+
+var _resource_manager = require('./managers/resource_manager.js');
+
+var _resource_manager2 = _interopRequireDefault(_resource_manager);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-/**
- * Created by Pavel on 01.04.2017.
- */
-var canvas = document.getElementById("myCanvas");
+var canvas = document.getElementById("myCanvas"); /**
+                                                   * Created by Pavel on 01.04.2017.
+                                                   */
+
 var ctx = canvas.getContext('2d');
 ctx.scale(2, 2);
 
 //TODO vytvorit soubor LevelManager nebo tak neco
-var level = [[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1], [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [1, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [1, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [1, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [1, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [1, 0, 0, 0, 0, 1, 1, 4, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]];
 
-var im = new _itemManager2.default();
+
+_level_manager2.default.initLevels();
 var dialogs = [];
-var player = new _player2.default(canvas.width / 2, canvas.height / 2, 18, 24, 2);
-var controls = new _controls2.default(player, dialogs);
-controls.init();
-//keyboard input
-
-
+var player = new _player2.default(canvas.width / 2, canvas.height / 2, 18, 24, 2, _resource_manager2.default.get("trainer"));
 //TODO udelat soubor worldBuilder nebo neco takoveho
 //init world
+var level = _level_manager2.default.actualLevel;
 var walls = [],
     items = [],
     grass = [];
@@ -53,23 +61,26 @@ for (var i = 0; i < level.length; i++) {
     for (var j = 0; j < level[i].length; j++) {
         switch (level[i][j]) {
             case 0:
-                grass.push(new _tile2.default(j * 32, i * 32, 32, 32, '/img/grass.png'));
+                grass.push(new _drawable2.default(j * 32, i * 32, 32, 32, _resource_manager2.default.get('grass')));
                 break;
             case 1:
-                walls.push(new _interactive_tile2.default(j * 32, i * 32, 32, 32, '/img/wall.png'));
+                walls.push(new _interactive_tile2.default(j * 32, i * 32, 32, 32, _resource_manager2.default.get('wall')));
                 break;
             case 2:
             case 3:
             case 4:
-                grass.push(new _tile2.default(j * 32, i * 32, 32, 32, '/img/grass.png'));
-                items.push(new _item2.default(j * 32, i * 32, 32, 32, im.getItem(level[i][j]), '/img/pokeball.png'));
+                grass.push(new _drawable2.default(j * 32, i * 32, 32, 32, _resource_manager2.default.get('grass')));
+                items.push(new _item2.default(j * 32, i * 32, 32, 32, _item_manager2.default.getItem(level[i][j]), _resource_manager2.default.get('pokeball')));
                 break;
         }
     }
 }
+//keyboard input
+var controls = new _controls2.default(player, dialogs);
+controls.init();
 
-function update() {
-    //TODO taky mozna mit nejaky collision checker
+//TODO vymyslet co s timto - presunout nepresunout?
+function checkCollisions() {
     for (var _i = 0; _i < walls.length; _i++) {
         if (walls[_i].checkCollisionWithPlayer(player)) {
             player.dx = 0;
@@ -81,13 +92,22 @@ function update() {
         if (items[_i2].checkCollisionWithPlayer(player)) {
             if (player.isDoingPrimaryAction()) {
                 controls.switchToDialogControls();
-                dialogs.push("You've found " + items[_i2].itemInfo.name);
-                dialogs.push(items[_i2].itemInfo.name + " is " + items[_i2].itemInfo.desc);
+                var dialogX = player.posX - canvas.width / 8 + player.w / 2;
+                var dialogY = player.posY + canvas.height / 2 - 200;
+                var dialogHeight = 50;
+                var dialogWidth = canvas.width / 4;
+                dialogs.push(new _dialog2.default(dialogX, dialogY, dialogWidth, dialogHeight, "You've found " + items[_i2].itemInfo.name));
+                dialogs.push(new _dialog2.default(dialogX, dialogY, dialogWidth, dialogHeight, items[_i2].itemInfo.name + " is " + items[_i2].itemInfo.desc));
                 player.backpack.addToBackpack(items[_i2].itemInfo.name);
                 items.splice(_i2, 1); //remove from map
             }
         }
     }
+}
+
+//game updates////////
+function update() {
+    checkCollisions();
     player.update();
     draw();
 }
@@ -109,38 +129,11 @@ function draw() {
 
     player.draw(ctx);
     if (dialogs.length != 0) {
-        drawDialogText(dialogs[0]);
+        dialogs[0].drawDialogText(ctx);
     }
     ctx.restore();
 }
 
-function drawDialogText(text) {
-    var dialogX = player.posX - canvas.width / 8 + player.w / 2;
-    var dialogY = player.posY + canvas.height / 2 - 200;
-    var dialogHeight = 50;
-    var dialogWidth = canvas.width / 4;
-    ctx.strokeStyle = "black";
-    ctx.fillStyle = "white";
-    ctx.lineWidth = 2;
-    ctx.fillRect(dialogX, dialogY, dialogWidth, dialogHeight);
-    ctx.strokeRect(dialogX, dialogY, dialogWidth, dialogHeight);
-
-    ctx.textBaseline = "middle";
-    ctx.font = "12px Arial";
-    ctx.fillStyle = "black";
-
-    var textX = dialogX + dialogWidth / 2 - ctx.measureText(text).width / 2;
-    var textY = dialogY + dialogHeight / 2 - 5;
-    ctx.fillText(text, textX, textY);
-
-    ctx.textBaseline = "middle";
-    ctx.font = "8px Arial";
-    ctx.fillStyle = "red";
-    var continueText = "Press Enter to continue";
-    textX = dialogX + dialogWidth / 2 - ctx.measureText(continueText).width / 2;
-    textY = dialogY + dialogHeight / 2 + 15;
-    ctx.fillText(continueText, textX, textY);
-}
 function clearCanvas() {
     ctx.fillStyle = '#000000';
     ctx.fillRect(0, 0, canvas.width, canvas.height);

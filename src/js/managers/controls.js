@@ -95,5 +95,5 @@ export default class Controls {
         document.addEventListener('keydown', this.movingKeyDown);
         document.addEventListener('keyup', this.movingKeyUp);
 
-    }
+    }.bind(this);
 }

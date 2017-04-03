@@ -41,6 +41,10 @@ export default class Tile {
         return this._h;
     }
 
+    get image() {
+        return this._image;
+    }
+
     draw(ctx){
         ctx.drawImage(this._image,this._posX,this._posY);
     }
