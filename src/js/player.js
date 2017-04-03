@@ -25,7 +25,7 @@ export default class Player {
         this._primaryAction = false;
     }
 
-    oPrimaryAction(){
+    doPrimaryAction(){
         //TODO nad timhle jeste pouvazovat
         if(this._primaryAction == false){
             // console.log('doing');

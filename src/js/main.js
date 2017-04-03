@@ -36,8 +36,9 @@ let level = [
 ];
 
 let im = new ItemManager();
+let dialogs = [];
 let player = new Player(canvas.width/2,canvas.height/2,24,24,2);
-let controls = new Controls(player);
+let controls = new Controls(player, dialogs);
 controls.init();
 //keyboard input
 
@@ -62,7 +63,6 @@ for(let i=0;i<level.length;i++){
 }
 
 function update(){
-
     //TODO taky mozna mit nejaky collision checker
     for(let i=0; i<walls.length; i++){
         if(walls[i].checkCollisionWithPlayer(player)){
@@ -73,12 +73,10 @@ function update(){
     for(let i=0; i<items.length; i++){
         if(items[i].checkCollisionWithPlayer(player)){
             if(player.isDoingPrimaryAction()) {
-                player.dx = 0;
-                player.dy = 0;
-                alert("You've found "+ items[i].itemInfo.name);
-                alert(items[i].itemInfo.name + ' is '+items[i].itemInfo.desc);
+                controls.switchToDialogControls();
+                dialogs.push("You've found "+items[i].itemInfo.name) ;
+                dialogs.push(items[i].itemInfo.name+" is "+items[i].itemInfo.desc) ;
                 player.addToScore(1);
-                console.log(player.score);
                 items.splice(i, 1);
             }
         }
@@ -90,7 +88,7 @@ function update(){
 function draw() {
     clearCanvas();
     ctx.save();
-    ctx.translate(-player.posX+ canvas.width/2/2 - player.w, -player.posY + canvas.height/2/2 - player.h)
+    ctx.translate(-player.posX+ canvas.width/2/2 - player.w, -player.posY + canvas.height/2/2 - player.h);
 
     for(let i=0; i<walls.length; i++){
         walls[i].draw(ctx);
@@ -98,10 +96,42 @@ function draw() {
     for(let i=0; i<items.length; i++){
         items[i].draw(ctx);
     }
+
     player.draw(ctx);
+    if(dialogs.length != 0){
+        drawDialogText(dialogs[0]);
+    }
     ctx.restore()
 }
 
+function drawDialogText(text) {
+    let dialogX = player.posX - canvas.width/8 + player.w/2;
+    let dialogY = player.posY + canvas.height/2 - 200;
+    let dialogHeight = 50;
+    let dialogWidth = canvas.width/4;
+    ctx.strokeStyle="black";
+    ctx.fillStyle = "white";
+    ctx.lineWidth = 2;
+    ctx.fillRect(dialogX , dialogY, dialogWidth, dialogHeight);
+    ctx.strokeRect(dialogX , dialogY, dialogWidth, dialogHeight);
+
+    ctx.textBaseline = "middle";
+    ctx.font = "12px Arial";
+    ctx.fillStyle = "black";
+
+    let textX = dialogX + dialogWidth/2 - ctx.measureText(text).width/2;
+    let textY = dialogY + dialogHeight/2 - 5;
+    ctx.fillText(text, textX, textY);
+
+    ctx.textBaseline = "middle";
+    ctx.font = "8px Arial";
+    ctx.fillStyle = "red";
+    let continueText = "Press Enter to continue";
+    textX = dialogX + dialogWidth/2 - ctx.measureText(continueText).width/2;
+    textY = dialogY + dialogHeight/2 + 15;
+    ctx.fillText(continueText, textX, textY);
+
+}
 function clearCanvas() {
     ctx.globalAlpha=0.7;
     ctx.fillStyle='#000000';
