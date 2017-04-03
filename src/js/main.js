@@ -2,7 +2,8 @@
  * Created by Pavel on 01.04.2017.
  */
 import Player from './player.js';
-import Wall from './wall.js'
+import Tile from './tile.js'
+import InteractiveTile from './interactive_tile.js'
 import Controls from './controls.js'
 import Item from './item.js'
 import ItemManager from './itemManager.js'
@@ -37,7 +38,7 @@ let level = [
 
 let im = new ItemManager();
 let dialogs = [];
-let player = new Player(canvas.width/2,canvas.height/2,24,24,2);
+let player = new Player(canvas.width/2,canvas.height/2,24,24,3);
 let controls = new Controls(player, dialogs);
 controls.init();
 //keyboard input
@@ -45,18 +46,21 @@ controls.init();
 
 //TODO udelat soubor worldBuilder nebo neco takoveho
 //init world
-let walls = [];
-let items = [];
+let walls = [], items = [], grass = [];
 for(let i=0;i<level.length;i++){
     for(let j=0;j<level[i].length;j++){
         switch (level[i][j]){
+            case 0:
+                grass.push(new Tile(j*32, i*32, 32, 32, '/img/grass.png'));
+                break;
             case 1:
-                walls.push(new Wall(j*32, i*32, 32, 32));
+                walls.push(new InteractiveTile(j*32, i*32, 32, 32, '/img/wall.png'));
                 break;
             case 2:
             case 3:
             case 4:
-                items.push(new Item(j*32, i*32, 32, 32, im.getItem(level[i][j])));
+                grass.push(new Tile(j*32, i*32, 32, 32, '/img/grass.png'));
+                items.push(new Item(j*32, i*32, 32, 32, im.getItem(level[i][j]), '/img/pokeball.png'));
                 break;
         }
     }
@@ -76,8 +80,8 @@ function update(){
                 controls.switchToDialogControls();
                 dialogs.push("You've found "+items[i].itemInfo.name) ;
                 dialogs.push(items[i].itemInfo.name+" is "+items[i].itemInfo.desc) ;
-                player.addToScore(1);
-                items.splice(i, 1);
+                player.backpack.addToBackpack(items[i].itemInfo.name);
+                items.splice(i, 1); //remove from map
             }
         }
     }
@@ -92,6 +96,9 @@ function draw() {
 
     for(let i=0; i<walls.length; i++){
         walls[i].draw(ctx);
+    }
+    for(let i=0; i<grass.length; i++){
+        grass[i].draw(ctx);
     }
     for(let i=0; i<items.length; i++){
         items[i].draw(ctx);
@@ -133,10 +140,8 @@ function drawDialogText(text) {
 
 }
 function clearCanvas() {
-    ctx.globalAlpha=0.7;
     ctx.fillStyle='#000000';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
-    ctx.globalAlpha=1;
 }
 
-setInterval(update, 10);
+setInterval(update, 1000/60);

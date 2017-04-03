@@ -34,8 +34,11 @@ export default class Controls {
             this.player.dx = 0;
             this.player.dy = playerSpeed; //down
         }
-        else if(event.keyCode == 13){
+        else if(event.keyCode == 13){ //enter
             this.player.doPrimaryAction();
+        }
+        else if(event.keyCode == 66) { //b
+            console.log(this.player.backpack.getBackpackItems());
         }
     }.bind(this);
 
@@ -57,7 +60,7 @@ export default class Controls {
     dialogKeyDown = function(event){
         if(event.keyCode == 13){
             if(this.dialogs.length != 0){
-                console.log(this.dialogs);
+                //console.log(this.dialogs);
                 this.dialogs.splice(0, 1);
                 if(this.dialogs.length == 0){
                     this.switchToMovingControls();

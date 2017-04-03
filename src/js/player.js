@@ -2,6 +2,7 @@
  * Created by Pavel on 01.04.2017.
  */
 //TODO jeden spolecny predek pro vsechny co se budou hybat
+import Backpack from './backpack.js'
 export default class Player {
     _posX;
     _posY;
@@ -11,6 +12,7 @@ export default class Player {
     _dy;
     _speed;
     _score;
+    _backpack
     _primaryAction;
 
     constructor(posX, posY, w, h, speed) {
@@ -23,6 +25,7 @@ export default class Player {
         this._speed = speed;
         this._score = 0;
         this._primaryAction = false;
+        this._backpack = new Backpack();
     }
 
     doPrimaryAction(){
@@ -106,5 +109,7 @@ export default class Player {
         return this._score;
     }
 
-    d
+    get backpack() {
+        return this._backpack;
+    }
 }

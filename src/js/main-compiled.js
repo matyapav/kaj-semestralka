@@ -4,9 +4,13 @@ var _player = require('./player.js');
 
 var _player2 = _interopRequireDefault(_player);
 
-var _wall = require('./wall.js');
+var _tile = require('./tile.js');
 
-var _wall2 = _interopRequireDefault(_wall);
+var _tile2 = _interopRequireDefault(_tile);
+
+var _interactive_tile = require('./interactive_tile.js');
+
+var _interactive_tile2 = _interopRequireDefault(_interactive_tile);
 
 var _controls = require('./controls.js');
 
@@ -22,10 +26,10 @@ var _itemManager2 = _interopRequireDefault(_itemManager);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var canvas = document.getElementById("myCanvas"); /**
-                                                   * Created by Pavel on 01.04.2017.
-                                                   */
-
+/**
+ * Created by Pavel on 01.04.2017.
+ */
+var canvas = document.getElementById("myCanvas");
 var ctx = canvas.getContext('2d');
 ctx.scale(2, 2);
 
@@ -34,7 +38,7 @@ var level = [[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 
 
 var im = new _itemManager2.default();
 var dialogs = [];
-var player = new _player2.default(canvas.width / 2, canvas.height / 2, 24, 24, 2);
+var player = new _player2.default(canvas.width / 2, canvas.height / 2, 24, 24, 3);
 var controls = new _controls2.default(player, dialogs);
 controls.init();
 //keyboard input
@@ -42,18 +46,23 @@ controls.init();
 
 //TODO udelat soubor worldBuilder nebo neco takoveho
 //init world
-var walls = [];
-var items = [];
+var walls = [],
+    items = [],
+    grass = [];
 for (var i = 0; i < level.length; i++) {
     for (var j = 0; j < level[i].length; j++) {
         switch (level[i][j]) {
+            case 0:
+                grass.push(new _tile2.default(j * 32, i * 32, 32, 32, '/img/grass.png'));
+                break;
             case 1:
-                walls.push(new _wall2.default(j * 32, i * 32, 32, 32));
+                walls.push(new _interactive_tile2.default(j * 32, i * 32, 32, 32, '/img/wall.png'));
                 break;
             case 2:
             case 3:
             case 4:
-                items.push(new _item2.default(j * 32, i * 32, 32, 32, im.getItem(level[i][j])));
+                grass.push(new _tile2.default(j * 32, i * 32, 32, 32, '/img/grass.png'));
+                items.push(new _item2.default(j * 32, i * 32, 32, 32, im.getItem(level[i][j]), '/img/pokeball.png'));
                 break;
         }
     }
@@ -73,8 +82,8 @@ function update() {
                 controls.switchToDialogControls();
                 dialogs.push("You've found " + items[_i2].itemInfo.name);
                 dialogs.push(items[_i2].itemInfo.name + " is " + items[_i2].itemInfo.desc);
-                player.addToScore(1);
-                items.splice(_i2, 1);
+                player.backpack.addToBackpack(items[_i2].itemInfo.name);
+                items.splice(_i2, 1); //remove from map
             }
         }
     }
@@ -90,8 +99,11 @@ function draw() {
     for (var _i3 = 0; _i3 < walls.length; _i3++) {
         walls[_i3].draw(ctx);
     }
-    for (var _i4 = 0; _i4 < items.length; _i4++) {
-        items[_i4].draw(ctx);
+    for (var _i4 = 0; _i4 < grass.length; _i4++) {
+        grass[_i4].draw(ctx);
+    }
+    for (var _i5 = 0; _i5 < items.length; _i5++) {
+        items[_i5].draw(ctx);
     }
 
     player.draw(ctx);
@@ -129,12 +141,10 @@ function drawDialogText(text) {
     ctx.fillText(continueText, textX, textY);
 }
 function clearCanvas() {
-    ctx.globalAlpha = 0.7;
     ctx.fillStyle = '#000000';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
-    ctx.globalAlpha = 1;
 }
 
-setInterval(update, 10);
+setInterval(update, 1000 / 60);
 
 //# sourceMappingURL=main-compiled.js.map
