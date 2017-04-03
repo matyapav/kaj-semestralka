@@ -25,6 +25,39 @@ export default class Player {
         this._primaryAction = false;
     }
 
+    oPrimaryAction(){
+        //TODO nad timhle jeste pouvazovat
+        if(this._primaryAction == false){
+            // console.log('doing');
+            this._primaryAction = true;
+            setTimeout(function () {
+                this._primaryAction = false;
+                //console.log('not doing');
+            }.bind(this), 500);
+        }
+    }
+
+    isDoingPrimaryAction(){
+        return this._primaryAction;
+    }
+
+    addToScore(points){
+        this._score += points;
+    }
+
+    update(){
+        this._posX += this._dx;
+        this._posY += this._dy;
+    }
+
+    draw(ctx){
+        ctx.beginPath();
+        ctx.rect(this._posX, this._posY, this._w, this._h);
+        ctx.fillStyle = "#0095DD";
+        ctx.fill();
+        ctx.closePath();
+    }
+
     get posX() {
         return this._posX;
     }
@@ -73,36 +106,5 @@ export default class Player {
         return this._score;
     }
 
-    doPrimaryAction(){
-        //TODO nad timhle jeste pouvazovat
-        if(this._primaryAction == false){
-           // console.log('doing');
-            this._primaryAction = true;
-            setTimeout(function () {
-                this._primaryAction = false;
-                //console.log('not doing');
-            }.bind(this), 500);
-        }
-    }
-
-    isDoingPrimaryAction(){
-        return this._primaryAction;
-    }
-
-    addToScore(points){
-        this._score += points;
-    }
-
-    update(){
-        this._posX += this._dx;
-        this._posY += this._dy;
-    }
-
-    draw(ctx){
-        ctx.beginPath();
-        ctx.rect(this._posX, this._posY, this._w, this._h);
-        ctx.fillStyle = "#0095DD";
-        ctx.fill();
-        ctx.closePath();
-    }
+    d
 }
