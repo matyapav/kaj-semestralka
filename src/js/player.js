@@ -3,19 +3,20 @@
  */
 //TODO jeden spolecny predek pro vsechny co se budou hybat
 import Backpack from './backpack.js'
-export default class Player {
-    _posX;
-    _posY;
-    _w;
-    _h;
+import Animation from './animation.js'
+import Tile from './tile.js'
+
+export default class Player extends Tile{
     _dx;
     _dy;
     _speed;
     _score;
-    _backpack
+    _backpack;
     _primaryAction;
+    _animation;
 
     constructor(posX, posY, w, h, speed) {
+        super(posX, posY, w, h);
         this._posX = posX;
         this._posY = posY;
         this._w = w;
@@ -26,6 +27,10 @@ export default class Player {
         this._score = 0;
         this._primaryAction = false;
         this._backpack = new Backpack();
+
+        let sprite = new Image();
+        sprite.src = '/img/trainer.png';
+        this._animation = new Animation(sprite, 4, 150, 0, [32, 30], [6,42], [this.w,this.h]);
     }
 
     doPrimaryAction(){
@@ -54,35 +59,16 @@ export default class Player {
     }
 
     draw(ctx){
-        ctx.beginPath();
-        ctx.rect(this._posX, this._posY, this._w, this._h);
-        ctx.fillStyle = "#0095DD";
-        ctx.fill();
-        ctx.closePath();
+        //DRAW PLAYER BOUNDS
+        // ctx.beginPath();
+        // ctx.fillStyle = "white";
+        // ctx.fillRect(this.posX, this.posY, this.w,this.h);
+        // ctx.closePath();
+        this._animation.drawActualFrame(ctx, this.posX,this.posY)
     }
 
-    get posX() {
-        return this._posX;
-    }
+    animate(){
 
-    set posX(value) {
-        this._posX = value;
-    }
-
-    get posY() {
-        return this._posY;
-    }
-
-    set posY(value) {
-        this._posY = value;
-    }
-
-    get w() {
-        return this._w;
-    }
-
-    get h() {
-        return this._h;
     }
 
     set dx(value) {

@@ -38,7 +38,7 @@ let level = [
 
 let im = new ItemManager();
 let dialogs = [];
-let player = new Player(canvas.width/2,canvas.height/2,24,24,3);
+let player = new Player(canvas.width/2,canvas.height/2,18,24,2);
 let controls = new Controls(player, dialogs);
 controls.init();
 //keyboard input
@@ -72,6 +72,7 @@ function update(){
         if(walls[i].checkCollisionWithPlayer(player)){
             player.dx = 0;
             player.dy = 0;
+            player._animation.stopAnimation();
         }
     }
     for(let i=0; i<items.length; i++){
@@ -144,4 +145,7 @@ function clearCanvas() {
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 }
 
+
 setInterval(update, 1000/60);
+
+///animation test

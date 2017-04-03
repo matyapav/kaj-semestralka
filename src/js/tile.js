@@ -42,10 +42,7 @@ export default class Tile {
     }
 
     draw(ctx){
-        ctx.beginPath();
         ctx.drawImage(this._image,this._posX,this._posY);
-        ctx.fill();
-        ctx.closePath();
     }
 
 }

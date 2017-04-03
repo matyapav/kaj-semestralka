@@ -38,7 +38,7 @@ var level = [[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 
 
 var im = new _itemManager2.default();
 var dialogs = [];
-var player = new _player2.default(canvas.width / 2, canvas.height / 2, 24, 24, 3);
+var player = new _player2.default(canvas.width / 2, canvas.height / 2, 18, 24, 2);
 var controls = new _controls2.default(player, dialogs);
 controls.init();
 //keyboard input
@@ -74,6 +74,7 @@ function update() {
         if (walls[_i].checkCollisionWithPlayer(player)) {
             player.dx = 0;
             player.dy = 0;
+            player._animation.stopAnimation();
         }
     }
     for (var _i2 = 0; _i2 < items.length; _i2++) {
@@ -146,5 +147,7 @@ function clearCanvas() {
 }
 
 setInterval(update, 1000 / 60);
+
+///animation test
 
 //# sourceMappingURL=main-compiled.js.map
