@@ -3,12 +3,10 @@
  */
 export default class Controls {
 
-    player;
-    dialogs;
+    gs;
 
-    constructor(player, dialogs){
-        this.player = player;
-        this.dialogs = dialogs;
+    constructor(gameState){
+        this.gs = gameState;
     }
 
     init(){
@@ -17,64 +15,64 @@ export default class Controls {
     }
 
     movingKeyDown = function(event) {
-        let playerSpeed = this.player.speed;
+        let playerSpeed = this.gs.player.speed;
         if(event.keyCode == 37) {
-            this.player.dy = 0;
-            this.player.dx = -playerSpeed; //left
-            this.player.playerAnimation.setFromToY([54,42]);
-            this.player.playerAnimation.runAnimation();
+            this.gs.player.dy = 0;
+            this.gs.player.dx = -playerSpeed; //left
+            this.gs.player.playerAnimation.setFromToY([54,42]);
+            this.gs.player.playerAnimation.runAnimation();
         }
         else if(event.keyCode == 38) {
-            this.player.dx = 0;
-            this.player.dy = -playerSpeed; //up
-            this.player.playerAnimation.setFromToY([150,42]);
-            this.player.playerAnimation.runAnimation();
+            this.gs.player.dx = 0;
+            this.gs.player.dy = -playerSpeed; //up
+            this.gs.player.playerAnimation.setFromToY([150,42]);
+            this.gs.player.playerAnimation.runAnimation();
         }
         else if(event.keyCode == 39) {
-            this.player.dy = 0;
-            this.player.dx = playerSpeed; //right
-            this.player.playerAnimation.setFromToY([102,42]);
-            this.player.playerAnimation.runAnimation();
+            this.gs.player.dy = 0;
+            this.gs.player.dx = playerSpeed; //right
+            this.gs.player.playerAnimation.setFromToY([102,42]);
+            this.gs.player.playerAnimation.runAnimation();
         }
         else if(event.keyCode == 40) {
-            this.player.dx = 0;
-            this.player.dy = playerSpeed; //down
-            this.player.playerAnimation.setFromToY([6,42]);
-            this.player.playerAnimation.runAnimation();
+            this.gs.player.dx = 0;
+            this.gs.player.dy = playerSpeed; //down
+            this.gs.player.playerAnimation.setFromToY([6,42]);
+            this.gs.player.playerAnimation.runAnimation();
         }
         else if(event.keyCode == 13){ //enter
-            this.player.doPrimaryAction();
+            this.gs.player.doPrimaryAction();
         }
         else if(event.keyCode == 66) { //b
-            console.log(this.player.backpack.getBackpackItems());
+            this.gs.backpackOpened = !this.gs.backpackOpened;
         }
     }.bind(this);
 
     movingKeyUp = function(event){
-        if(event.keyCode == 37 && this.player.dx < 0) {
-            this.player.dx = 0;
-            this.player.playerAnimation.stopAnimation();
+        if(event.keyCode == 37 && this.gs.player.dx < 0) {
+            this.gs.player.dx = 0;
+            this.gs.player.playerAnimation.stopAnimation();
         }
-        else if(event.keyCode == 38 && this.player.dy < 0) {
-            this.player.dy = 0;
-            this.player.playerAnimation.stopAnimation();
+        else if(event.keyCode == 38 && this.gs.player.dy < 0) {
+            this.gs.player.dy = 0;
+            this.gs.player.playerAnimation.stopAnimation();
         }
-        else if(event.keyCode == 39 && this.player.dx > 0) {
-            this.player.dx = 0;
-            this.player.playerAnimation.stopAnimation();
+        else if(event.keyCode == 39 && this.gs.player.dx > 0) {
+            this.gs.player.dx = 0;
+            this.gs.player.playerAnimation.stopAnimation();
         }
-        else if(event.keyCode == 40 && this.player.dy > 0) {
-            this.player.dy = 0;
-            this.player.playerAnimation.stopAnimation();
+        else if(event.keyCode == 40 && this.gs.player.dy > 0) {
+            this.gs.player.dy = 0;
+            this.gs.player.playerAnimation.stopAnimation();
         }
     }.bind(this);
 
     dialogKeyDown = function(event){
         if(event.keyCode == 13){
-            if(this.dialogs.length != 0){
-                //console.log(this.dialogs);
-                this.dialogs.splice(0, 1);
-                if(this.dialogs.length == 0){
+            if(this.gs.dialogs.length != 0){
+                //console.log(this.gs.dialogs);
+                this.gs.dialogs.splice(0, 1);
+                if(this.gs.dialogs.length == 0){
                     this.switchToMovingControls();
                 }
             }
@@ -83,8 +81,8 @@ export default class Controls {
 
 
     switchToDialogControls = function(){
-        this.player.dx = 0;
-        this.player.dy = 0;
+        this.gs.player.dx = 0;
+        this.gs.player.dy = 0;
         document.removeEventListener('keydown', this.movingKeyDown);
         document.removeEventListener('keyup', this.movingKeyUp);
         document.addEventListener('keydown', this.dialogKeyDown);

@@ -27,7 +27,6 @@ export default class Player extends Drawable{
         this._score = 0;
         this._primaryAction = false;
         this._backpack = new Backpack();
-
         this._animation = new Animation(this.image, 4, 150, 0, [32, 30], [6,42], [this.w,this.h]);
     }
 

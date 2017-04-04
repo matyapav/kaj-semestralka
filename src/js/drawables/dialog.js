@@ -11,7 +11,7 @@ export default class Dialog extends Drawable{
         this._text = text;
     }
 
-    drawDialogText(ctx) {
+    draw(ctx) {
 
         ctx.strokeStyle="black";
         ctx.fillStyle = "white";

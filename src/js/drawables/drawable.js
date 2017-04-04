@@ -1,7 +1,7 @@
 /**
  * Created by Pavel on 03.04.2017.
  */
-export default class Tile {
+export default class Drawable {
     _posX;
     _posY;
     _w;
@@ -21,7 +21,7 @@ export default class Tile {
         return this._posX;
     }
 
-    set posX(value) {
+    setPosX(value) {
         this._posX = value;
     }
 
@@ -29,7 +29,7 @@ export default class Tile {
         return this._posY;
     }
 
-    set posY(value) {
+    setPosY(value) {
         this._posY = value;
     }
 
@@ -37,8 +37,16 @@ export default class Tile {
         return this._w;
     }
 
+    setWidth(value) {
+        this._w = value;
+    }
+
     get h() {
         return this._h;
+    }
+
+    setHeight(value) {
+        this._h = value;
     }
 
     get image() {
