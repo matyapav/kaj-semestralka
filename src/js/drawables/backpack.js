@@ -63,11 +63,14 @@ export default class Backpack extends Drawable{
         ctx.stroke();
 
 
+        //setup for items
         ctx.textBaseline = "middle";
         ctx.font = "10px Arial";
         ctx.fillStyle = "black";
         let paddingTop = 15;
         let lineHeight = 15;
+
+        //draw items
         for(let i = 0; i < this._backpack_items.length; i++){
             let itemText = this._backpack_items[i].quantity +"x "+ this._backpack_items[i].name;
             textX = this.posX + this.w/2 - ctx.measureText(itemText).width/2;
