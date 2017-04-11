@@ -8,23 +8,22 @@ import Controls from './managers/controls.js'
 import Item from './drawables/item.js'
 import ItemManager from './managers/item_manager.js'
 import LevelManager from './managers/level_manager.js'
-import Dialog from './drawables/dialog.js'
 import ResourceManager from './managers/resource_manager.js'
+
+import StateHandler from './managers/state_handler.js'
 
 //init canvas
 const canvas = document.getElementById("myCanvas");
 const ctx = canvas.getContext('2d');
 ctx.scale(2, 2);
 
-//init game stuff
-let state = {
-    player: new Player(canvas.width / 2, canvas.height / 2, 18, 24, 2, ResourceManager.get("trainer")),
-    dialogs: [],
-    backpackOpened: false
-};
+let state = new StateHandler();
+let player = new Player(canvas.width / 2, canvas.height / 2, 18, 24, 2, ResourceManager.get("trainer"), state);
+state.setPlayer(player);
+
 LevelManager.initLevels();
 let level = LevelManager.actualLevel;
-let walls = [], items = [], grass = [];
+let walls = [], grass = [];
 let controls = new Controls(state);
 controls.init();
 initLevel();
@@ -44,7 +43,8 @@ function initLevel() {
                 case 3:
                 case 4:
                     grass.push(new Drawable(j * 32, i * 32, 32, 32, ResourceManager.get('grass')));
-                    items.push(new Item(j * 32, i * 32, 32, 32, ItemManager.getItem(level[i][j]), ResourceManager.get('pokeball')));
+                    let itemInfo = ItemManager.getItem(level[i][j]);
+                    state.createItem(j * 32, i * 32, 32, 32, itemInfo);
                     break;
             }
         }
@@ -55,24 +55,24 @@ function initLevel() {
 function checkCollisions() {
     for (let i = 0; i < walls.length; i++) {
         if (walls[i].checkCollisionWithPlayer(state.player)) {
-            state.player.dx = 0;
-            state.player.dy = 0;
-            state.player.playerAnimation.stopAnimation();
+            state.player.stopPlayer();
         }
     }
-    for (let i = 0; i < items.length; i++) {
-        if (items[i].checkCollisionWithPlayer(state.player)) {
+    for (let i = 0; i < state.items.length; i++) {
+        if (state.items[i].checkCollisionWithPlayer(state.player)) {
             if (state.player.isDoingPrimaryAction()) {
-                controls.switchToDialogControls();
+                state.player.stopPlayer();
+                state.controls = Controls.DIALOG;
+                state.lastConstrols = Controls.MOVING;
                 let dialogX = state.player.posX - canvas.width / 8 + state.player.w / 2;
                 let dialogY = state.player.posY + canvas.height / 2 - 200;
                 let dialogHeight = 50;
                 let dialogWidth = canvas.width / 4;
-                state.dialogs.push(new Dialog(dialogX, dialogY, dialogWidth, dialogHeight, "You've found " + items[i].itemInfo.name));
-                state.dialogs.push(new Dialog(dialogX, dialogY, dialogWidth, dialogHeight,
-                    items[i].itemInfo.name + " is " + items[i].itemInfo.desc));
-                state.player.backpack.addToBackpack(items[i].itemInfo.name);
-                items.splice(i, 1); //remove from map
+                state.createDialog(dialogX, dialogY, dialogWidth, dialogHeight, "You've found " + state.items[i].itemInfo.name);
+                state.createDialog(dialogX, dialogY, dialogWidth, dialogHeight,
+                    state.items[i].itemInfo.name + " is " + state.items[i].itemInfo.desc);
+                state.player.pickUpItem(state.items[i].itemInfo);
+                state.items.splice(i, 1); //remove from map
             }
         }
     }
@@ -96,8 +96,8 @@ function draw() {
     for (let i = 0; i < grass.length; i++) {
         grass[i].draw(ctx);
     }
-    for (let i = 0; i < items.length; i++) {
-        items[i].draw(ctx);
+    for (let i = 0; i < state.items.length; i++) {
+        state.items[i].draw(ctx);
     }
 
     state.player.draw(ctx);

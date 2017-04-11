@@ -5,16 +5,53 @@ export default class Controls {
 
     gs;
 
+    static MOVING = 0;
+    static DIALOG = 1;
+    static BACKPACK = 2;
+
+
     constructor(gameState){
         this.gs = gameState;
     }
 
     init(){
-        document.addEventListener('keydown', this.movingKeyDown);
-        document.addEventListener('keyup', this.movingKeyUp);
+        document.addEventListener('keydown', this.activeControlsKeyDown);
+        document.addEventListener('keyup', this.activeControlsKeyUp);
     }
 
-    movingKeyDown = function(event) {
+    activeControlsKeyDown = (event) => {
+        switch(this.gs.controls){
+            case Controls.MOVING:
+                this.movingKeyDown(event);
+                break;
+            case Controls.DIALOG:
+                this.dialogKeyDown(event);
+                break;
+            case Controls.BACKPACK:
+                this.backpackKeyDown(event);
+                break;
+            default:
+                throw Error('Controls not defined.');
+                break;
+        }
+    };
+
+    activeControlsKeyUp = (event) => {
+        switch(this.gs.controls){
+            case Controls.MOVING:
+                this.movingKeyUp(event);
+                break;
+            case Controls.DIALOG:
+                break;
+            case Controls.BACKPACK:
+                break;
+            default:
+                throw Error('Controls not defined.');
+                break;
+        }
+    };
+
+    movingKeyDown = (event) => {
         let playerSpeed = this.gs.player.speed;
         if(event.keyCode == 37) {
             this.gs.player.dy = 0;
@@ -44,11 +81,14 @@ export default class Controls {
             this.gs.player.doPrimaryAction();
         }
         else if(event.keyCode == 66) { //b
-            this.gs.backpackOpened = !this.gs.backpackOpened;
+            this.gs.backpackOpened = true;
+            this.gs.player.stopPlayer();
+            this.gs.controls = Controls.BACKPACK;
+            this.gs.lastConstrols = Controls.MOVING;
         }
-    }.bind(this);
+    };
 
-    movingKeyUp = function(event){
+    movingKeyUp = (event) => {
         if(event.keyCode == 37 && this.gs.player.dx < 0) {
             this.gs.player.dx = 0;
             this.gs.player.playerAnimation.stopAnimation();
@@ -65,33 +105,48 @@ export default class Controls {
             this.gs.player.dy = 0;
             this.gs.player.playerAnimation.stopAnimation();
         }
-    }.bind(this);
+    };
 
-    dialogKeyDown = function(event){
+    dialogKeyDown = (event) => {
         if(event.keyCode == 13){
             if(this.gs.dialogs.length != 0){
                 //console.log(this.gs.dialogs);
                 this.gs.dialogs.splice(0, 1);
                 if(this.gs.dialogs.length == 0){
-                    this.switchToMovingControls();
+                    this.gs.controls = this.gs.lastConstrols;
+                    this.gs.lastConstrols = Controls.MOVING;
                 }
             }
         }
-    }.bind(this);
+    };
 
-
-    switchToDialogControls = function(){
-        this.gs.player.dx = 0;
-        this.gs.player.dy = 0;
-        document.removeEventListener('keydown', this.movingKeyDown);
-        document.removeEventListener('keyup', this.movingKeyUp);
-        document.addEventListener('keydown', this.dialogKeyDown);
-    }.bind(this);
-
-    switchToMovingControls = function(){
-        document.removeEventListener('keydown', this.dialogKeyDown);
-        document.addEventListener('keydown', this.movingKeyDown);
-        document.addEventListener('keyup', this.movingKeyUp);
-
-    }.bind(this);
+    backpackKeyDown = (event) => {
+        if(event.keyCode == 38) {
+            if(this.gs.player.backpack._showItemActions){
+                this.gs.player.backpack.decrementActionsSelected();
+            }else {
+                this.gs.player.backpack.decrementSelected();
+            }
+        }
+        else if(event.keyCode == 40) {
+            if(this.gs.player.backpack._showItemActions) {
+                this.gs.player.backpack.incrementActionsSelected();
+            }else{
+                this.gs.player.backpack.incrementSelected();
+            }
+        }
+        else if(event.keyCode == 13){ //enter
+            if(this.gs.player.backpack._showItemActions) {
+                this.gs.player.performSelectedBackpackAction();
+            }else{
+                this.gs.player.backpack.toggleItemActions();
+            }
+            //do something with item
+        }
+        else if(event.keyCode == 66) { //b
+            this.gs.backpackOpened = false;
+            this.gs.player.backpack.resetBackpackStatusToDefault();
+            this.gs.controls = this.gs.lastConstrols;
+        }
+    };
 }

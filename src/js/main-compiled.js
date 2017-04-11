@@ -66,6 +66,8 @@ function initLevel() {
     for (var i = 0; i < level.length; i++) {
         for (var j = 0; j < level[i].length; j++) {
             switch (level[i][j]) {
+                case -1:
+                    state.player = new _player2.default(j * 32, i * 32);
                 case 0:
                     grass.push(new _drawable2.default(j * 32, i * 32, 32, 32, _resource_manager2.default.get('grass')));
                     break;

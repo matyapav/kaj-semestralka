@@ -12,7 +12,6 @@ export default class Dialog extends Drawable{
     }
 
     draw(ctx) {
-
         //draw dialog rect
         ctx.strokeStyle="black";
         ctx.fillStyle = "white";
