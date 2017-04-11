@@ -12,6 +12,8 @@ import ResourceManager from './managers/resource_manager.js'
 
 import StateHandler from './managers/state_handler.js'
 
+window.onload = function () {
+
 //init canvas
 const canvas = document.getElementById("myCanvas");
 const ctx = canvas.getContext('2d');
@@ -124,3 +126,4 @@ function clearCanvas() {
 setInterval(update, 1000 / 60);
 
 ///animation test
+};
