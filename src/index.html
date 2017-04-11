@@ -1,15 +1,81 @@
 <!doctype html>
 <html class="no-js" lang="">
-    <head>
-        <meta charset="utf-8">
-        <title>Javascript Game</title>
-        <meta name="description" content="">
-        <link rel="stylesheet" href="css/main.css">
-
-    </head>
-    <body>
-    <h1>A0M33KAJ - Semestrálka</h1>
-    <canvas id="myCanvas" width="1280" height="640" style="border:1px solid #000000;"/>
-    <script src="client.min.js"></script>
-    </body>
+<head>
+    <meta charset="utf-8">
+    <title>Javascript Game</title>
+    <meta name="description" content="">
+    <link rel="stylesheet" href="css/main.css">
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+</head>
+<body>
+<h1>A0M33KAJ - Semestrálka</h1>
+<div>
+    <div id="canvasDiv">
+        <canvas id="myCanvas" width="1280" height="640"></canvas>
+    </div>
+    <div>
+        <h1>Controls</h1>
+        <table class="table table-bordered table-striped table-hover center">
+            <tbody>
+            <tr>
+                <td colspan="2"><b>Character controls</b></td>
+            </tr>
+            <tr>
+                <td>↑</td>
+                <td>Move up</td>
+            </tr>
+            <tr>
+                <td>←</td>
+                <td>Move left</td>
+            </tr>
+            <tr>
+                <td>↓</td>
+                <td>Move down</td>
+            </tr>
+            <tr>
+                <td>→</td>
+                <td>Move right</td>
+            </tr>
+            <tr>
+                <td>Enter</td>
+                <td>Primary action (e.g. pickup item)</td>
+            </tr>
+            <tr>
+                <td>B</td>
+                <td>Open backpack</td>
+            </tr>
+            <tr>
+                <td colspan="2"><b>Backpack controls</b></td>
+            </tr>
+            <tr>
+                <td>↑</td>
+                <td>Navigate up through items/actions</td>
+            </tr>
+            <tr>
+                <td>↓</td>
+                <td>Navigate down through items/actions</td>
+            </tr>
+            <tr>
+                <td>Enter</td>
+                <td>Select item/action</td>
+            </tr>
+            <tr>
+                <td>B</td>
+                <td>Close backpack</td>
+            </tr>
+            <tr>
+                <td colspan="2"><b>Dialog controls</b></td>
+            </tr>
+            <tr>
+                <td>Enter</td>
+                <td>Continue reading dialog</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<script src="client.min.js"></script>
+</body>
 </html>
