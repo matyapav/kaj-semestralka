@@ -54,7 +54,9 @@ export default class Drawable {
     }
 
     draw(ctx){
-        ctx.drawImage(this._image,this._posX,this._posY, this._w, this._h);
+        if(this._image.complete){
+            ctx.drawImage(this._image,this._posX,this._posY, this._w, this._h);
+        }
     }
 
 }
