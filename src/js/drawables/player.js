@@ -153,12 +153,6 @@ export default class Player extends Drawable{
 
         this._posX+= this._dx;
         this._posY += this._dy;
-
-        // if(!this._state.keyState[37] || !this._state.keyState[38] || !this._state.keyState[39] || !this._state.keyState[40]){
-        //     this._animation.stopAnimation();
-        //     this._dx = 0;
-        // }
-
     }
 
     isMoving(){
