@@ -4,8 +4,8 @@
 /**
  * Created by Pavel on 03.04.2017.
  */
-//TODO udelat jednoho spolecneho predka pro vsechno co se vykresluje (neco jako drawable)
 import Drawable from './drawable.js'
+import {TILE_SIZE} from '../utils/constants.js'
 
 export default class InteractiveTile extends Drawable{
 

@@ -1189,8 +1189,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
         if (state.backpackOpened) {
             var bpX = state.player.posX + canvas.width / 8 + state.player.w / 2;
-            var bpY = state.player.posY - canvas.height / 8 - 50;
-            var bpHeight = canvas.height / 2 - 15;
+            var bpY = state.player.posY - canvas.height / 8 ;
+            var bpHeight = canvas.height / 2;
             var bpWidth = 160;
             state.player.backpack.setPosition(bpX, bpY, bpWidth, bpHeight);
             state.player.backpack.draw(ctx);

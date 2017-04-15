@@ -9,6 +9,7 @@ import Item from './drawables/item.js'
 import ItemManager from './managers/item_manager.js'
 import LevelManager from './managers/level_manager.js'
 import ResourceManager from './managers/resource_manager.js'
+import {FPS, TILE_SIZE} from './utils/constants.js';
 
 import StateHandler from './managers/state_handler.js'
 
@@ -20,12 +21,11 @@ const ctx = canvas.getContext('2d');
 ctx.scale(2, 2);
 
 let state = new StateHandler();
-let player = new Player(canvas.width / 2, canvas.height / 2, 18, 24, 2, ResourceManager.get("trainer"), state);
-state.setPlayer(player);
+
 
 LevelManager.initLevels();
 let level = LevelManager.actualLevel;
-let walls = [], grass = [];
+let grass = [];
 let controls = new Controls(state);
 controls.init();
 initLevel();
@@ -35,18 +35,21 @@ function initLevel() {
     for (let i = 0; i < level.length; i++) {
         for (let j = 0; j < level[i].length; j++) {
             switch (level[i][j]) {
+                case -1:
+                    let player = new Player(j * TILE_SIZE, i * TILE_SIZE, TILE_SIZE, TILE_SIZE, ResourceManager.get("trainer"), state);
+                    state.setPlayer(player);
                 case 0:
-                    grass.push(new Drawable(j * 32, i * 32, 32, 32, ResourceManager.get('grass')));
+                    grass.push(new Drawable(j * TILE_SIZE, i * TILE_SIZE, TILE_SIZE, TILE_SIZE, ResourceManager.get('grass')));
                     break;
                 case 1:
-                    walls.push(new InteractiveTile(j * 32, i * 32, 32, 32, ResourceManager.get('wall')));
+                    state.walls.push(new Drawable(j * TILE_SIZE, i * TILE_SIZE, TILE_SIZE, TILE_SIZE, ResourceManager.get('wall')));
                     break;
                 case 2:
                 case 3:
                 case 4:
-                    grass.push(new Drawable(j * 32, i * 32, 32, 32, ResourceManager.get('grass')));
+                    grass.push(new Drawable(j * TILE_SIZE, i * TILE_SIZE, TILE_SIZE, TILE_SIZE, ResourceManager.get('grass')));
                     let itemInfo = ItemManager.getItem(level[i][j]);
-                    state.createItem(j * 32, i * 32, 32, 32, itemInfo);
+                    state.createItem(j * TILE_SIZE, i * TILE_SIZE, TILE_SIZE, TILE_SIZE, itemInfo);
                     break;
             }
         }
@@ -55,15 +58,9 @@ function initLevel() {
 
 //TODO vymyslet co s timto - presunout nepresunout?
 function checkCollisions() {
-    for (let i = 0; i < walls.length; i++) {
-        if (walls[i].checkCollisionWithPlayer(state.player)) {
-            state.player.stopPlayer();
-        }
-    }
     for (let i = 0; i < state.items.length; i++) {
         if (state.items[i].checkCollisionWithPlayer(state.player)) {
             if (state.player.isDoingPrimaryAction()) {
-                state.player.stopPlayer();
                 state.controls = Controls.DIALOG;
                 state.lastConstrols = Controls.MOVING;
                 let dialogX = state.player.posX - canvas.width / 8 + state.player.w / 2;
@@ -80,11 +77,25 @@ function checkCollisions() {
     }
 }
 
-//game updates////////
-function update() {
+let interval     =    1000/FPS,
+    lastTime     =    (new Date()).getTime(),
+    currentTime  =    0,
+    delta = 0;
+
+//game loop////////
+function gameLoop() {
     checkCollisions();
-    state.player.update();
-    draw();
+    window.requestAnimationFrame(gameLoop);
+
+    currentTime = (new Date()).getTime();
+    delta = (currentTime-lastTime);
+
+    if(delta > interval) {
+        state.player.update();
+        draw();
+        window.requestAnimationFrame(gameLoop);
+        lastTime = currentTime - (delta % interval);
+    }
 }
 //draw
 function draw() {
@@ -92,8 +103,8 @@ function draw() {
     ctx.save();
     ctx.translate(-state.player.posX + canvas.width / 2 / 2 - state.player.w, -state.player.posY + canvas.height / 2 / 2 - state.player.h);
 
-    for (let i = 0; i < walls.length; i++) {
-        walls[i].draw(ctx);
+    for (let i = 0; i < state.walls.length; i++) {
+        state.walls[i].draw(ctx);
     }
     for (let i = 0; i < grass.length; i++) {
         grass[i].draw(ctx);
@@ -109,7 +120,7 @@ function draw() {
 
     if (state.backpackOpened) {
         let bpX = state.player.posX + canvas.width / 8 + state.player.w / 2;
-        let bpY = state.player.posY - canvas.height/8 - 50;
+        let bpY = state.player.posY - canvas.height/8 - 40;
         let bpHeight = canvas.height/2 - 15;
         let bpWidth = 160;
         state.player.backpack.setPosition(bpX, bpY, bpWidth, bpHeight);
@@ -123,7 +134,7 @@ function clearCanvas() {
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 }
 
-setInterval(update, 1000 / 60);
 
-///animation test
+gameLoop();
+
 };

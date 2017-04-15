@@ -16,6 +16,9 @@ export default class StateHandler {
     controls;
     lastConstrols;
     items;
+    walls;
+    keyState;
+    moveTimer;
 
     constructor(){
         this.dialogs = [];
@@ -23,6 +26,9 @@ export default class StateHandler {
         this.controls = Controls.MOVING;
         this.lastConstrols = Controls.MOVING;
         this.items = [];
+        this.walls = [];
+        this.keyState = {};
+        this.moveTimer = null;
     }
 
     setPlayer(player){
@@ -34,6 +40,7 @@ export default class StateHandler {
     }
 
     createItem(posX, posY, w, h, itemInfo){
+
         this.items.push(new Item(posX, posY, w, h, itemInfo, ResourceManager.get(itemInfo.image)));
     }
 

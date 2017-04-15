@@ -6,19 +6,23 @@ import Backpack from './backpack.js'
 import Animation from '../utils/animation.js'
 import Drawable from './drawable.js'
 import Controls from '../managers/controls.js'
+import LevelManager from '../managers/level_manager.js'
+import {FPS, TILE_SIZE, WALL} from '../utils/constants.js'
 
 export default class Player extends Drawable{
 
     _state;
     _dx;
     _dy;
-    _speed;
     _score;
     _backpack;
     _primaryAction;
     _animation;
+    posXBackup;
+    posYBackup;
+    playerSpeed;
 
-    constructor(posX, posY, w, h, speed, imgSrc, state) {
+    constructor(posX, posY, w, h, imgSrc, state) {
         super(posX, posY, w, h, imgSrc);
         this._posX = posX;
         this._posY = posY;
@@ -26,12 +30,13 @@ export default class Player extends Drawable{
         this._h = h;
         this._dx = 0;
         this._dy = 0;
-        this._speed = speed;
         this._score = 0;
         this._primaryAction = false;
         this._backpack = new Backpack();
         this._animation = new Animation(this.image, 4, 150, 0, [32, 30], [6,42], [this.w,this.h]);
         this._state = state;
+        this.playerSpeed = TILE_SIZE / (FPS / (1000 / 250));
+        console.log(this.playerSpeed);
     }
 
     doPrimaryAction(){
@@ -54,10 +59,112 @@ export default class Player extends Drawable{
         this._score += points;
     }
 
+    //TODO zkusit ucesat :D
     update(){
-        this._posX += this._dx;
+        if (this._state.keyState[37] && this._state.moveTimer == null) {
+            this._dy = 0;
+            let isColliding =
+                LevelManager.actualLevel[(this._posY) / TILE_SIZE][(this._posX - TILE_SIZE) / TILE_SIZE] == WALL;
+
+            (()=> {
+                if (!isColliding) {
+                    this.posXBackup = this._posX;
+                    this._dx = -this.playerSpeed;
+
+                    this._state.moveTimer = setTimeout(()=> {
+                        this._posX = this.posXBackup - TILE_SIZE;
+                        this.posXBackup = this.posXBackup - TILE_SIZE;
+                        this._state.moveTimer = null;
+                        this._dx = 0;
+                        console.log("cleared");
+                    }, 250);
+                    this._animation.runAnimation();
+                } else {
+                    this._animation.stopAnimation();
+                }
+            })();
+
+            this._animation.setFromToY([54, 42]);
+        }
+        else if (this._state.keyState[38] && this._state.moveTimer == null) {
+            this._dx = 0;
+            let isColliding = LevelManager.actualLevel[(this._posY - TILE_SIZE) / TILE_SIZE][(this._posX) / TILE_SIZE] == 1;
+            (()=> {
+                if (!isColliding) {
+                    this.posYBackup = this._posY;
+                    this._dy = -this.playerSpeed;
+
+                    this._state.moveTimer = setTimeout(()=> {
+                        this._posY = this.posYBackup - TILE_SIZE;
+                        this.posYBackup = this.posYBackup - TILE_SIZE;
+                        this._state.moveTimer = null;
+                        this._dy = 0;
+                    }, 250);
+                    this._animation.runAnimation();
+                } else {
+                    this._animation.stopAnimation();
+                }
+            })();
+            this._animation.setFromToY([150, 42]);
+
+        }
+        else if (this._state.keyState[39] && this._state.moveTimer == null) {
+            this._dy = 0;
+            let isColliding = LevelManager.actualLevel[(this._posY) / TILE_SIZE][(this._posX + TILE_SIZE) / TILE_SIZE] == 1;
+            (()=> {
+                if (!isColliding) {
+                    this.posXBackup = this._posX;
+                    this._dx = this.playerSpeed;
+                    this._state.moveTimer = setTimeout(()=> {
+                        this._posX = this.posXBackup + TILE_SIZE;
+                        this.posXBackup = this.posXBackup + TILE_SIZE;
+                        this._state.moveTimer = null;
+                        this._dx = 0;
+                    }, 250);
+                    this._animation.runAnimation();
+                } else {
+                    this._animation.stopAnimation();
+                }
+            })();
+            this._animation.setFromToY([102, 42]);
+        }
+        else if (this._state.keyState[40] && this._state.moveTimer == null) {
+            this._dx = 0;
+            let isColliding = LevelManager.actualLevel[(this._posY + TILE_SIZE) / TILE_SIZE][(this._posX) / TILE_SIZE] == 1;
+
+            (()=> {
+                if (!isColliding) {
+                    this.posYBackup = this._posY;
+                    this._dy = this.playerSpeed;
+                    this._state.moveTimer = setTimeout(()=> {
+                        this._posY = this.posYBackup + TILE_SIZE;
+                        this.posYBackup = this.posYBackup + TILE_SIZE;
+                        this._state.moveTimer = null;
+                        this._dy = 0;
+                    }, 250);
+                    this._animation.runAnimation();
+                } else {
+                    this._animation.stopAnimation();
+                }
+            })();
+
+            this._animation.setFromToY([6, 42]);
+        }
+
+        this._posX+= this._dx;
         this._posY += this._dy;
+
+        // if(!this._state.keyState[37] || !this._state.keyState[38] || !this._state.keyState[39] || !this._state.keyState[40]){
+        //     this._animation.stopAnimation();
+        //     this._dx = 0;
+        // }
+
     }
+
+    isMoving(){
+        return this._dx != 0 || this._dy || 0;
+    }
+
 
     stopPlayer() {
         this._dx = 0;
@@ -89,6 +196,7 @@ export default class Player extends Drawable{
                 break;
             case 'Drop': //drop one TODO drop X and drop All
                 this._state.createItem(this.posX, this.posY, 32, 32, item);
+
                 this.backpack.decreaseQuantityOfItemOnIndex(this.backpack._selectedIndex);
                 break;
         }
@@ -118,10 +226,6 @@ export default class Player extends Drawable{
 
     get dy() {
         return this._dy;
-    }
-
-    get speed() {
-        return this._speed;
     }
 
     get score() {
