@@ -3,14 +3,110 @@ body{
 }
 
 #myCanvas{
+    position: absolute;
     border:1px solid #000000;
-    margin-left: 220px;
+    margin:auto;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: -1;
 }
 
-#canvasDiv{
-    float: left;
+#overCanvas{
+    position: absolute;
+    width: 1280px;
+    height: 640px;
+    margin:auto;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    -webkit-animation-name: openScene; /* Safari 4.0 - 8.0 */
+    -webkit-animation-duration: 2s; /* Safari 4.0 - 8.0 */
+    animation-name: openScene;
+    animation-duration: 2s;
 }
 
-.table {
-    display: initial;
+#controls.active {
+    right: 0px;
+    height: 900px;
 }
+
+#controls {
+    margin-top: 20px;
+    border-radius: 20px 0px 0px 20px;
+    position: fixed;
+    top: 0;
+    right: -550px;
+    width: 750px;
+    border-left: 1px solid black;
+    z-index: 2;
+    height: 64px;
+    background-color: #70c8a0;
+    -webkit-transition: right 0.5s, height 0.5s ease 0.5s;
+    transition: right 0.5s, height 0.5s ease 0.5s;
+    overflow: auto;
+}
+
+#controls h1{
+    margin-top: 70px;
+}
+
+#controls>button.openControls {
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: 3;
+    text-align: center;
+
+}
+#controls > button.openControls span {
+    display: block;
+    width: 200px;
+    font-size: 20px;
+    line-height: 50px;
+}
+
+#controls > .table {
+    width: 630px;
+    margin-left: 60px;
+    margin-right: 60px;
+    background-color: #ffffff;
+    font-size: 20px;
+}
+/* Safari 4.0 - 8.0 */
+@-webkit-keyframes openScene {
+    from {background-color: black; z-index: 10}
+    to {z-index: 0}
+}
+
+/* Other browsers */
+@keyframes openScene {
+    from {background-color: black; z-index: 10}
+    to {z-index: 0}
+}
+
+#github{
+    position: fixed;
+    width: 300px;
+    height: 100px;
+    margin-left: -100px ;
+    top: 0;
+    left: 0;
+    opacity: 0.5;
+    line-height: 40px;
+    transform: rotate(-45deg);
+    background-color: #a9a9a9;
+    transition: opacity 0.5s ease;
+}
+#github:hover {
+    opacity: 1;
+    transition: opacity 0.5s ease;
+}
+
+#github img {
+    width: 110px;
+    height: 40px;
+}
+

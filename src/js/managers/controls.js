@@ -12,13 +12,6 @@ export default class Controls {
     static DIALOG = 1;
     static BACKPACK = 2;
 
-    posXBackup;
-    posYBackup;
-    timeout = null;
-    playerSpeed;
-
-
-
     constructor(gameState) {
         this.gs = gameState;
     }
@@ -26,7 +19,6 @@ export default class Controls {
     init() {
         document.addEventListener('keydown', this.activeControlsKeyDown);
         document.addEventListener('keyup', this.activeControlsKeyUp);
-        this.playerSpeed = TILE_SIZE / (FPS / (1000 / 250));
     }
 
     activeControlsKeyDown = (event) => {
@@ -83,12 +75,13 @@ export default class Controls {
             //handle input in player udpate method
             this.gs.keyState[event.keyCode || event.which] = false;
         }
+
         const i = setInterval(()=>{
             if(this.gs.moveTimer == null){
                 this.gs.player.playerAnimation.stopAnimation();
                 clearInterval(i);
             }
-        });
+        }, 10);
     };
 
 
