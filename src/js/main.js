@@ -24,45 +24,19 @@ let state = new StateHandler();
 
 
 LevelManager.initLevels();
-let level = LevelManager.actualLevel;
-let grass = [];
 let controls = new Controls(state);
 controls.init();
-initLevel();
+state.initActualLevel();
 
-/////////////////////////////////////////
-function initLevel() {
-    for (let i = 0; i < level.length; i++) {
-        for (let j = 0; j < level[i].length; j++) {
-            switch (level[i][j]) {
-                case -1:
-                    let player = new Player(j * TILE_SIZE, i * TILE_SIZE, TILE_SIZE, TILE_SIZE, ResourceManager.get("trainer"), state);
-                    state.setPlayer(player);
-                case 0:
-                    grass.push(new Drawable(j * TILE_SIZE, i * TILE_SIZE, TILE_SIZE, TILE_SIZE, ResourceManager.get('grass')));
-                    break;
-                case 1:
-                    state.walls.push(new Drawable(j * TILE_SIZE, i * TILE_SIZE, TILE_SIZE, TILE_SIZE, ResourceManager.get('wall')));
-                    break;
-                case 2:
-                case 3:
-                case 4:
-                    grass.push(new Drawable(j * TILE_SIZE, i * TILE_SIZE, TILE_SIZE, TILE_SIZE, ResourceManager.get('grass')));
-                    let itemInfo = ItemManager.getItem(level[i][j]);
-                    state.createItem(j * TILE_SIZE, i * TILE_SIZE, TILE_SIZE, TILE_SIZE, itemInfo);
-                    break;
-            }
-        }
-    }
-}
-
-//TODO vymyslet co s timto - presunout nepresunout?
-function checkCollisions() {
+//TODO vymyslet co s timto - presunout nepresunout? UPDATE: teoreticky kdyz si predam state tak to muze byt v itemu
+function checkItemCollisions() {
     for (let i = 0; i < state.items.length; i++) {
         if (state.items[i].checkCollisionWithPlayer(state.player)) {
             if (state.player.isDoingPrimaryAction()) {
                 state.controls = Controls.DIALOG;
                 state.lastConstrols = Controls.MOVING;
+
+                //TODO nastavit pozici a rozmery dialogu napevno v dialog class
                 let dialogX = state.player.posX - canvas.width / 8 + state.player.w / 2;
                 let dialogY = state.player.posY + canvas.height / 2 - 200;
                 let dialogHeight = 50;
@@ -84,7 +58,7 @@ let interval     =    1000/FPS,
 
 //game loop////////
 function gameLoop() {
-    checkCollisions();
+    checkItemCollisions();
     window.requestAnimationFrame(gameLoop);
 
     currentTime = (new Date()).getTime();
@@ -106,8 +80,8 @@ function draw() {
     for (let i = 0; i < state.walls.length; i++) {
         state.walls[i].draw(ctx);
     }
-    for (let i = 0; i < grass.length; i++) {
-        grass[i].draw(ctx);
+    for (let i = 0; i < state.grass.length; i++) {
+        state.grass[i].draw(ctx);
     }
     for (let i = 0; i < state.items.length; i++) {
         state.items[i].draw(ctx);
@@ -118,6 +92,7 @@ function draw() {
         state.dialogs[0].draw(ctx);
     }
 
+    //TODO nastavit pozici napevno v backpacku
     if (state.backpackOpened) {
         let bpX = state.player.posX + canvas.width / 8 + state.player.w / 2;
         let bpY = state.player.posY - canvas.height/8 - 40;

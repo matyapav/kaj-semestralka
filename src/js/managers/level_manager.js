@@ -42,4 +42,6 @@ export default class LevelManager{
     static nextLevel(){
         this._actualLevelIndex++;
     }
+
+
 }

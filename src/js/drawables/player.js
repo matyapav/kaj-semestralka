@@ -75,6 +75,7 @@ export default class Player extends Drawable{
                         this._posX = this.posXBackup - TILE_SIZE;
                         this.posXBackup = this.posXBackup - TILE_SIZE;
                         this._state.moveTimer = null;
+                        clearTimeout(this._state.moveTimer);
                         this._dx = 0;
                         console.log("cleared");
                     }, 250);
@@ -98,6 +99,7 @@ export default class Player extends Drawable{
                         this._posY = this.posYBackup - TILE_SIZE;
                         this.posYBackup = this.posYBackup - TILE_SIZE;
                         this._state.moveTimer = null;
+                        clearTimeout(this._state.moveTimer);
                         this._dy = 0;
                     }, 250);
                     this._animation.runAnimation();
@@ -119,6 +121,7 @@ export default class Player extends Drawable{
                         this._posX = this.posXBackup + TILE_SIZE;
                         this.posXBackup = this.posXBackup + TILE_SIZE;
                         this._state.moveTimer = null;
+                        clearTimeout(this._state.moveTimer);
                         this._dx = 0;
                     }, 250);
                     this._animation.runAnimation();
@@ -140,6 +143,7 @@ export default class Player extends Drawable{
                         this._posY = this.posYBackup + TILE_SIZE;
                         this.posYBackup = this.posYBackup + TILE_SIZE;
                         this._state.moveTimer = null;
+                        clearTimeout(this._state.moveTimer);
                         this._dy = 0;
                     }, 250);
                     this._animation.runAnimation();
@@ -189,7 +193,7 @@ export default class Player extends Drawable{
                 this._state.lastConstrols = Controls.BACKPACK;
                 break;
             case 'Drop': //drop one TODO drop X and drop All
-                this._state.createItem(this.posX, this.posY, 32, 32, item);
+                this._state.createItem(this.posX, this.posY, TILE_SIZE, TILE_SIZE, item);
 
                 this.backpack.decreaseQuantityOfItemOnIndex(this.backpack._selectedIndex);
                 break;

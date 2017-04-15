@@ -13,6 +13,7 @@ export default class InteractiveTile extends Drawable{
         super(posX, posY, w, h, imgSrc);
     }
 
+    //TODO trochu vylepsit - bere napriklad 3 itemy najednou
     checkCollisionWithPlayer(player){
         //console.log(player.posX+" "+player.posY+" | "+this._posX+ " "+this._posY);
         return  ((
